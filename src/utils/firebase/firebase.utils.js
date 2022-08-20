@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword } from "firebase/auth"
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"
 
 // Apps firebase config details
@@ -60,4 +60,20 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!password || !email) return
 
   return await createUserWithEmailAndPassword(auth, email, password)
+}
+
+// Sign in with email and password
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!password || !email) {
+    alert("Email and password fields appear to be unfilled")
+    return
+  } else if (!email) {
+    alert("Email field appears to be unfilled")
+    return
+  } else if (!password) {
+    alert("Password field appears to be unfilled")
+    return
+  }
+
+  return await signInWithEmailAndPassword(auth, email, password)
 }

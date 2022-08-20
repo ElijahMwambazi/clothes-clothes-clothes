@@ -1,48 +1,66 @@
 import { useState } from "react";
 import {
-  createAuthUserWithEmailAndPassword,
+  signInAuthUserWithEmailAndPassword,
+  signInWithGooglePopup,
   createUserDocFromAuth,
 } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
+import "./sign-in-form.styles.scss";
 
 const defaultFormFields = {
-  displayName: "",
   email: "",
   password: "",
-  confirmPassword: "",
 };
 
-const SignUpForm = () => {
+const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const { displayName, email, password, confirmPassword } = formFields;
+  const { email, password } = formFields;
+
+  // Log user with google popup
+  const logGoogleUser = async () => {
+    const { user } = await signInWithGooglePopup();
+
+    try {
+      await createUserDocFromAuth(user);
+    } catch (error) {
+      if (
+        error.code === "auth/popup-closed-by-user" ||
+        error.code === "auth/popup-blocked"
+      )
+        return;
+
+      console.log("Encountered error while creating user:", error.message);
+    }
+  };
 
   // Handle submitions
   const submissionHandler = async (event) => {
     event.preventDefault();
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
     try {
-      // Get user authentication info
-      const { user } = await createAuthUserWithEmailAndPassword(
+      // Sign in user with email and password
+      const responce = await signInAuthUserWithEmailAndPassword(
         email,
         password
       );
+      console.log(responce);
 
-      // Creating user in database
-      await createUserDocFromAuth(user, { displayName });
       resetFormFields();
     } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        alert("Email seems to already be in use");
-        return;
+      switch (error.code) {
+        case "auth/wrong-password":
+          alert("Password entered does not match account");
+          break;
+        case "auth/user-not-found":
+          alert("No user is associated with email");
+          break;
       }
 
-      console.log("Encountered error while creating user:", error.message);
+      console.log(
+        "Encountered error while attempting to sign in:",
+        error.message
+      );
     }
   };
 
@@ -59,22 +77,12 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="sign-up-container">
-      <h2>Don't have an account?</h2>
-      <span>Sign up with your email and password</span>
+    <div className="sign-in-container">
+      <h2>Already have an account?</h2>
+      <span>Sign in with your email and password</span>
       <form onSubmit={submissionHandler}>
         <FormInput
-          label="Name"
-          inputOptions={{
-            required: true,
-            type: "text",
-            onChange: changeHandler,
-            name: "displayName",
-            value: displayName,
-          }}
-        />
-        <FormInput
-          label="Email"
+          label="email"
           inputOptions={{
             required: true,
             type: "email",
@@ -85,7 +93,7 @@ const SignUpForm = () => {
           }}
         />
         <FormInput
-          label="Password"
+          label="password"
           inputOptions={{
             required: true,
             type: "password",
@@ -94,25 +102,17 @@ const SignUpForm = () => {
             onChange: changeHandler,
             name: "password",
             value: password,
-            minLength: "8",
           }}
         />
-        <FormInput
-          label="Confirm Password"
-          inputOptions={{
-            required: true,
-            type: "password",
-            onChange: changeHandler,
-            name: "confirmPassword",
-            value: confirmPassword,
-            minLength: "8",
-          }}
-        />
-
-        <Button type="submit">Sign Up</Button>
+        <div className="buttons-container">
+          <Button type="submit">Sign In</Button>
+          <Button type="button" buttonType="google" onClick={logGoogleUser}>
+            Google Sign In
+          </Button>
+        </div>
       </form>
     </div>
   );
 };
 
-export default SignUpForm;
+export default SignInForm;
