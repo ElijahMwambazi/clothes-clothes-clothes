@@ -19,19 +19,7 @@ const SignInForm = () => {
 
   // Log user with google popup
   const logGoogleUser = async () => {
-    const { user } = await signInWithGooglePopup();
-
-    try {
-      await createUserDocFromAuth(user);
-    } catch (error) {
-      if (
-        error.code === "auth/popup-closed-by-user" ||
-        error.code === "auth/popup-blocked"
-      )
-        return;
-
-      console.log("Encountered error while creating user:", error.message);
-    }
+    await signInWithGooglePopup();
   };
 
   // Handle submitions
@@ -40,11 +28,7 @@ const SignInForm = () => {
 
     try {
       // Sign in user with email and password
-      const responce = await signInAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      console.log(responce);
+      await signInAuthUserWithEmailAndPassword(email, password);
 
       resetFormFields();
     } catch (error) {
