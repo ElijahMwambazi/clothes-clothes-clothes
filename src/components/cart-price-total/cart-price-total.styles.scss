@@ -1,0 +1,18 @@
+.cart-price-total-container {
+  border-bottom: 1px solid #444;
+
+  .total-text {
+    font-weight: 700;
+  }
+}
+
+.total-small {
+  margin: 10px 0;
+  padding: 10px 0;
+}
+
+.total-large {
+  margin-top: 30px;
+  margin-left: auto;
+  font-size: 36px;
+}

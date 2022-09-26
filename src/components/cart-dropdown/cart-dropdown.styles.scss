@@ -6,6 +6,7 @@
   flex-direction: column;
   padding: 20px;
   border: 1px solid black;
+  border-radius: 0 0 2px 2px;
   background-color: white;
   top: 90px;
   right: 40px;
@@ -20,7 +21,7 @@
     height: 240px;
     display: flex;
     flex-direction: column;
-    overflow: scroll;
+    overflow-y: scroll;
   }
 
   button {
