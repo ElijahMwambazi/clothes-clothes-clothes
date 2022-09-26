@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth"
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs } from "firebase/firestore"
 
 // Apps firebase config details
 const firebaseConfig = {
@@ -12,26 +12,56 @@ const firebaseConfig = {
   appId: "1:254675331386:web:791e2b8f218248115b8803"
 };
 
-// Initialize firebase app instance
+// TODO: Initialize firebase app instance
 initializeApp(firebaseConfig)
 
-// Initialize google authentication provider and set custom provider parameters
+// TODO: Initialize google authentication provider and set custom provider parameters
 const provider = new GoogleAuthProvider()
 provider.setCustomParameters({
   prompt: "select_account"
 })
 
-// Create authentication instance
+// TODO: Create authentication instance
 export const auth = getAuth()
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider)
 
-// Create firestore database instance
+// TODO: Create firestore database instance
 export const db = getFirestore()
 
-// Create user in database
+// TODO: Write to Firestore
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd, field) => {
+  const collectionRef = collection(db, collectionKey)
+  const batch = writeBatch(db)
+
+  objectsToAdd.forEach((object) => {
+    const docRef = doc(collectionRef, object[field].toLowerCase())
+    batch.set(docRef, object)
+  })
+
+  await batch.commit()
+  console.log("Data added to Firestore database")
+}
+
+// TODO: Read from Firestore
+export const getCategoriesAndDocuments = async () => {
+  const categoriesCollectionRef = collection(db, "categories")
+  const q = query(categoriesCollectionRef)
+
+  const querySnapshot = await getDocs(q)
+  const categoriesMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    const { title, items } = docSnapshot.data()
+    acc[title.toLowerCase()] = items
+
+    return acc
+  }, {})
+
+  return categoriesMap
+}
+
+// TODO: Create user in database
 export const createUserDocFromAuth = async (userAuth, additionalData = {}) => {
   if (!userAuth) return
-  console.log(userAuth)
+
   const userDocRef = doc(db, "users", userAuth.uid)
 
   const userSnapshot = await getDoc(userDocRef)
@@ -62,7 +92,7 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
   return await createUserWithEmailAndPassword(auth, email, password)
 }
 
-// Sign in with email and password
+// TODO: Sign in with email and password
 export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   if (!password || !email) {
     alert("Email and password fields appear to be unfilled")
@@ -78,8 +108,8 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   return await signInWithEmailAndPassword(auth, email, password)
 }
 
-// Sign out user
+// TODO: Sign out user
 export const signOutUser = async () => await signOut(auth)
 
-// Listen authentication state change
+// TODO: Listen authentication state change
 export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback)
