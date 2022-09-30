@@ -2,11 +2,10 @@ import { useState } from "react";
 import {
   signInAuthUserWithEmailAndPassword,
   signInWithGooglePopup,
-  createUserDocFromAuth,
 } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
-import Button from "../button/button.component";
-import "./sign-in-form.styles.scss";
+import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
+import { ButtonContainer } from "./sign-in-form.styles";
 
 const defaultFormFields = {
   email: "",
@@ -39,6 +38,8 @@ const SignInForm = () => {
         case "auth/user-not-found":
           alert("No user is associated with email");
           break;
+        default:
+          console.log(error);
       }
 
       console.log(
@@ -88,12 +89,16 @@ const SignInForm = () => {
             value: password,
           }}
         />
-        <div className="buttons-container">
+        <ButtonContainer>
           <Button type="submit">Sign In</Button>
-          <Button type="button" buttonType="google" onClick={logGoogleUser}>
+          <Button
+            type="button"
+            buttonType={BUTTON_TYPE_CLASSES.google}
+            onClick={logGoogleUser}
+          >
             Google Sign In
           </Button>
-        </div>
+        </ButtonContainer>
       </form>
     </div>
   );
