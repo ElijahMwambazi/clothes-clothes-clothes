@@ -1,7 +1,11 @@
 import { useContext } from "react";
-import { UserContext } from "../../contexts/user.context";
+import { useSelector } from "react-redux";
+
+import { selectCurrentUser } from "../../store/user/user.selector";
 import { CartContext } from "../../contexts/cart.context";
+
 import { BUTTON_TYPE_CLASSES } from "../button/button.component";
+
 import {
   ProductCardContainer,
   Image,
@@ -12,8 +16,9 @@ import {
 } from "./product-card.styles";
 
 const ProductCard = ({ product }) => {
+  const currentUser = useSelector(selectCurrentUser);
+
   const { imageUrl, name, price } = product;
-  const { currentUser } = useContext(UserContext);
   const { addItemsToCart } = useContext(CartContext);
 
   const addProductToCart = () => addItemsToCart(product);
