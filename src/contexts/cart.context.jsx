@@ -110,7 +110,6 @@ export const CartProvider = ({ children }) => {
       (total, cartItem) => total + cartItem.price * cartItem.quantity,
       0
     );
-    console.log(newCartItems);
 
     dispatch(
       createAction(CART_ACTION_TYPES.SET_CART_ITEMS, {
