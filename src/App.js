@@ -35,7 +35,7 @@ const App = () => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [dispatch]);
 
   const { isCartOpen, setIsCartOpen } = useContext(CartContext)
 
