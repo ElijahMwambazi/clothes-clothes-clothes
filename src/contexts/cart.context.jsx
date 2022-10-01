@@ -95,8 +95,6 @@ export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, INITIAL_STATE);
   const { isCartOpen, cartItems, cartItemCount, cartPriceTotal } = state;
 
-  console.log(cartItems);
-
   // set cartItems
   const updateCartReducer = (newCartItems) => {
     // TODO: get total number of items in cart
