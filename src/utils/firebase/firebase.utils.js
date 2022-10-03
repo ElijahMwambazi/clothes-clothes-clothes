@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth"
-import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs } from "firebase/firestore"
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs, DocumentSnapshot } from "firebase/firestore"
 
 // Apps firebase config details
 const firebaseConfig = {
@@ -48,14 +48,8 @@ export const getCategoriesAndDocuments = async () => {
   const q = query(categoriesCollectionRef)
 
   const querySnapshot = await getDocs(q)
-  const categoriesMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    const { title, items } = docSnapshot.data()
-    acc[title.toLowerCase()] = items
 
-    return acc
-  }, {})
-
-  return categoriesMap
+  return querySnapshot.docs.map((docSnapshot) => docSnapshot.data())
 }
 
 // TODO: Create user in database
