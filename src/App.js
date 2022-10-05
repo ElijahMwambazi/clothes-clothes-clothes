@@ -1,6 +1,6 @@
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { Routes, Route } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 import Navigation from "./routes/navigation/navigation.route"
 import Home from "./routes/home/home.route"
@@ -10,8 +10,9 @@ import Checkout from "./routes/checkout/checkout.route"
 
 import { onAuthStateChangedListener, createUserDocFromAuth } from "./utils/firebase/firebase.utils";
 import { setCurrentUser } from "./store/user/user.action"
+import { setIsCartOpen } from "./store/cart/cart.action"
 
-import { CartContext } from "./contexts/cart.context"
+import { selectIsCartOpen } from "./store/cart/cart.selector"
 
 const App = () => {
   const dispatch = useDispatch()
@@ -37,13 +38,13 @@ const App = () => {
     return unsubscribe;
   }, [dispatch]);
 
-  const { isCartOpen, setIsCartOpen } = useContext(CartContext)
+  const isCartOpen = useSelector(selectIsCartOpen)
 
   const closeCart = () => {
     // TODO: check if cart is open
     if (isCartOpen) {
       // if open, close cart
-      return setIsCartOpen(!isCartOpen)
+      return dispatch(setIsCartOpen(!isCartOpen))
     }
   }
 

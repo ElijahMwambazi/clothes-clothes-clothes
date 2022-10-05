@@ -1,5 +1,7 @@
-import { useContext } from "react";
-import { CartContext } from "../../contexts/cart.context";
+import { useSelector } from "react-redux";
+
+import { selectCartPriceTotal } from "../../store/cart/cart.selector";
+
 import {
   CartPriceTotalBase,
   TotalText,
@@ -21,8 +23,7 @@ const getTotalType = (totalType = TOTAL_TYPE_CLASSES.total_base) =>
   }[totalType]);
 
 const CartPriceTotal = ({ totalType }) => {
-  const { cartPriceTotal } = useContext(CartContext);
-
+  const cartPriceTotal = useSelector(selectCartPriceTotal);
   const CustomTotal = getTotalType(totalType);
 
   return (

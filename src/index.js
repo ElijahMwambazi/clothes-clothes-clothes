@@ -8,8 +8,6 @@ import App from './App';
 
 import { store } from './store/store'
 
-import { CartProvider } from './contexts/cart.context';
-
 import './index.scss';
 
 
@@ -18,9 +16,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <CartProvider>
-          <App />
-        </CartProvider>
+        <App />
       </BrowserRouter>
     </Provider>
   </React.StrictMode >
