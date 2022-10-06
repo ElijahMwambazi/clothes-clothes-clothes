@@ -1,23 +1,30 @@
 import { compose, legacy_createStore as createStore, applyMiddleware } from "redux"
-// import logger from "redux-logger"
+import { persistStore, persistReducer } from "redux-persist"
+import storage from "redux-persist/lib/storage"
+import logger from "redux-logger"
+import thunk from "redux-thunk"
+
+// import { loggerMiddlewar } from "../middleware/logger"
+
 import { rootReducer } from "./root-reducer"
 
-const loggerMiddlewar = (store) => (next) => (action) => {
-	if (!action.type) {
-		return next(action)
-	}
 
-	console.log("type: ", action.type)
-	console.log("payload: ", action.payload)
-	console.log("currentState: ", store.getState())
-
-	next(action)
-
-	console.log("nextState: ", store.getState())
+const persistConfig = {
+	key: "root",
+	storage: storage,
+	blacklist: ["user"]
 }
 
-const middleWares = [loggerMiddlewar]
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const composedEnhancers = compose(applyMiddleware(...middleWares))
+// Apply middelware only in production
+const middleWares = [process.env.NODE_ENV !== "production" && logger, thunk].filter(Boolean)
 
-export const store = createStore(rootReducer, undefined, composedEnhancers)
+// Setup redux devtools
+const composedEnhancer = (process.env.NODE_ENV !== "production" && window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
+
+const composedEnhancers = composedEnhancer(applyMiddleware(...middleWares))
+
+export const store = createStore(persistedReducer, undefined, composedEnhancers)
+
+export const persistor = persistStore(store)
