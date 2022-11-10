@@ -1,10 +1,12 @@
 import { useState } from "react";
-import {
-  createAuthUserWithEmailAndPassword,
-  createUserDocFromAuth,
-} from "../../utils/firebase/firebase.utils";
+import { useDispatch } from "react-redux";
+
+import { signUpStart } from "../../store/user/user.action";
+
 import FormInput from "../form-input/form-input.component";
-import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
+import Button, {
+  BUTTON_TYPE_CLASSES,
+} from "../button/button.component";
 
 const defaultFormFields = {
   displayName: "",
@@ -14,8 +16,16 @@ const defaultFormFields = {
 };
 
 const SignUpForm = () => {
-  const [formFields, setFormFields] = useState(defaultFormFields);
-  const { displayName, email, password, confirmPassword } = formFields;
+  const dispatch = useDispatch();
+  const [formFields, setFormFields] = useState(
+    defaultFormFields
+  );
+  const {
+    displayName,
+    email,
+    password,
+    confirmPassword,
+  } = formFields;
 
   // Handle submitions
   const submissionHandler = async (event) => {
@@ -28,21 +38,23 @@ const SignUpForm = () => {
 
     try {
       // Get user authentication info
-      const { user } = await createAuthUserWithEmailAndPassword(
-        email,
-        password
+      dispatch(
+        signUpStart(email, password, displayName)
       );
 
-      // Creating user in database
-      await createUserDocFromAuth(user, { displayName });
       resetFormFields();
     } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
+      if (
+        error.code === "auth/email-already-in-use"
+      ) {
         alert("Email seems to already be in use");
         return;
       }
 
-      console.log("Encountered error while creating user:", error.message);
+      console.log(
+        "Encountered error while creating user:",
+        error.message
+      );
     }
   };
 
@@ -50,7 +62,10 @@ const SignUpForm = () => {
   const changeHandler = (event) => {
     const { name, value } = event.target;
 
-    setFormFields({ ...formFields, [name]: value });
+    setFormFields({
+      ...formFields,
+      [name]: value,
+    });
   };
 
   // Reset input fields
@@ -61,7 +76,9 @@ const SignUpForm = () => {
   return (
     <div className="sign-up-container">
       <h2>Don't have an account?</h2>
-      <span>Sign up with your email and password</span>
+      <span>
+        Sign up with your email and password
+      </span>
       <form onSubmit={submissionHandler}>
         <FormInput
           label="Name"
@@ -78,7 +95,8 @@ const SignUpForm = () => {
           inputOptions={{
             required: true,
             type: "email",
-            pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$",
+            pattern:
+              "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$",
             onChange: changeHandler,
             name: "email",
             value: email,
@@ -109,7 +127,10 @@ const SignUpForm = () => {
           }}
         />
 
-        <Button buttonType={BUTTON_TYPE_CLASSES.base} type="submit">
+        <Button
+          buttonType={BUTTON_TYPE_CLASSES.base}
+          type="submit"
+        >
           Sign Up
         </Button>
       </form>

@@ -8,34 +8,17 @@ import Authentication from "./routes/authentication/authentication.route"
 import Shop from "./routes/shop/shop.route"
 import Checkout from "./routes/checkout/checkout.route"
 
-import { onAuthStateChangedListener, createUserDocFromAuth } from "./utils/firebase/firebase.utils";
-import { setCurrentUser } from "./store/user/user.action"
 import { setIsCartOpen } from "./store/cart/cart.action"
+import { checkUserSession } from "./store/user/user.action"
 
 import { selectIsCartOpen } from "./store/cart/cart.selector"
 
 const App = () => {
   const dispatch = useDispatch()
 
+  // ! Subcribe and unsubscribe user
   useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener(async (user) => {
-      if (user) {
-        try {
-          await createUserDocFromAuth(user);
-        } catch (error) {
-          if (
-            error.code === "auth/popup-closed-by-user" ||
-            error.code === "auth/popup-blocked"
-          )
-            return;
-          console.log("Encountered error while creating user:", error.message);
-        }
-      }
-
-      dispatch(setCurrentUser(user));
-    });
-
-    return unsubscribe;
+    dispatch(checkUserSession())
   }, [dispatch]);
 
   const isCartOpen = useSelector(selectIsCartOpen)

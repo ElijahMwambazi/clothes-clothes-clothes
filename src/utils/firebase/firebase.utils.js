@@ -77,7 +77,7 @@ export const createUserDocFromAuth = async (userAuth, additionalData = {}) => {
     }
   }
 
-  return userDocRef
+  return userSnapshot
 }
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -107,3 +107,12 @@ export const signOutUser = async () => await signOut(auth)
 
 // TODO: Listen authentication state change
 export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback)
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubcrube = onAuthStateChanged(auth, (userAuth) => {
+      unsubcrube()
+      resolve(userAuth)
+    }, reject)
+  })
+}
