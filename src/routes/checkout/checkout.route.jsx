@@ -1,13 +1,17 @@
 import { useSelector } from "react-redux";
+
 import CheckoutItem from "../../components/checkout-item/checkout-item.components";
 import CartPriceTotal, {
   TOTAL_TYPE_CLASSES,
 } from "../../components/cart-price-total/cart-price-total.components";
+import PaymentForm from "../../components/payment-form/payment-form.components";
+
 import {
   CheckoutContainer,
   CheckoutHeader,
   HeaderBlock,
 } from "./checkout.styles";
+
 import { selectCartItems } from "../../store/cart/cart.selector";
 
 const Checkout = () => {
@@ -35,10 +39,18 @@ const Checkout = () => {
 
       {cartItems.map((cartItem) => {
         const { id } = cartItem;
-        return <CheckoutItem key={id} cartItem={cartItem} />;
+        return (
+          <CheckoutItem
+            key={id}
+            cartItem={cartItem}
+          />
+        );
       })}
 
-      <CartPriceTotal totalType={TOTAL_TYPE_CLASSES.total_large} />
+      <CartPriceTotal
+        totalType={TOTAL_TYPE_CLASSES.total_large}
+      />
+      <PaymentForm />
     </CheckoutContainer>
   );
 };

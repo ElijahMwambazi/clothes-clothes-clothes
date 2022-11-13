@@ -13,6 +13,7 @@ import { checkUserSession } from "./store/user/user.action"
 
 import { selectIsCartOpen } from "./store/cart/cart.selector"
 
+
 const App = () => {
   const dispatch = useDispatch()
 
