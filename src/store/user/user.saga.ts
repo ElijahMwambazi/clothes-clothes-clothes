@@ -14,7 +14,6 @@ import {
   createAuthUserWithEmailAndPassword,
   signOutUser,
   TAdditionalData,
-  TUser,
 } from "../../utils/firebase/firebase.utils";
 
 import { USER_ACTION_TYPES } from "./user.types";
@@ -198,5 +197,6 @@ export function* userSaga() {
     call(onEmailSignInStart),
     call(onSignUpStart),
     call(onSignUpSuccess),
+    call(onSignOutStart),
   ]);
 }
