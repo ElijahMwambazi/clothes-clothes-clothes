@@ -1,5 +1,8 @@
 import { FC } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import { selectCurrentUser } from "../../store/user/user.selector";
 
 import {
   DirectoryContainer,
@@ -24,11 +27,19 @@ const DirectoryItem: FC<TDirectoryProps> = ({
   category,
 }) => {
   const { imageUrl, title, route } = category;
+  const currentUser = useSelector(
+    selectCurrentUser
+  );
 
   const navigate = useNavigate();
 
   const onNavigateHundler = () => {
-    navigate(route);
+    if (currentUser) {
+      navigate(route);
+    }
+    if (!currentUser) {
+      navigate("/auth");
+    }
   };
 
   return (
