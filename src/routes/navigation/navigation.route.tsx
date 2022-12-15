@@ -1,5 +1,8 @@
-import { Fragment } from "react";
-import { Outlet } from "react-router-dom";
+import { Fragment, useEffect } from "react";
+import {
+  Outlet,
+  useNavigate,
+} from "react-router-dom";
 import {
   useSelector,
   useDispatch,
@@ -23,6 +26,7 @@ import {
 } from "./navigation.styles";
 
 const Navigation = () => {
+  const navigate = useNavigate();
   const currentUser = useSelector(
     selectCurrentUser
   );
@@ -31,8 +35,19 @@ const Navigation = () => {
   );
   const dispatch = useDispatch();
 
-  const signOutHandler = () =>
+  const signOutHandler = () => {
     dispatch(signOutStart());
+
+    // Redirect to auth page when logged out
+    navigate("/auth");
+  };
+
+  // Redirect to home page when user is logged in
+  useEffect(() => {
+    if (currentUser) {
+      navigate("");
+    }
+  }, [currentUser]);
 
   return (
     <Fragment>
@@ -41,7 +56,9 @@ const Navigation = () => {
           <CrownLogo />
         </LogoContainer>
         <NavLinks>
-          <NavLink to="shop">Shop</NavLink>
+          {currentUser && (
+            <NavLink to="shop">Shop</NavLink>
+          )}
           {currentUser ? (
             <NavLink
               as="span"

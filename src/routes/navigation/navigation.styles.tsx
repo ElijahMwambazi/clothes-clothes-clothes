@@ -1,4 +1,7 @@
-import { Link } from "react-router-dom";
+import {
+  Link,
+  NavLink as navLink,
+} from "react-router-dom";
 import styled from "styled-components";
 
 export const NavigationContainer = styled.div`
@@ -23,8 +26,14 @@ export const NavLinks = styled.div`
   justify-content: flex-end;
 `;
 
-export const NavLink = styled(Link)`
+export const NavLink = styled(navLink)`
   text-transform: uppercase;
   padding: 10px 15px;
   cursor: pointer;
+
+  &:hover,
+  &.active {
+    color: red;
+    text-decoration: underline;
+  }
 `;
