@@ -12,7 +12,7 @@ import { store, persistor } from "./store/store";
 
 import { stripePromise } from "./utils/stripe/stripe.utils";
 
-import "./index.scss";
+import { GlobalStyles } from "./global.styles";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -20,6 +20,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
+    <GlobalStyles />
     <Provider store={store}>
       <PersistGate
         loading={null}
